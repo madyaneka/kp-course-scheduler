@@ -38,3 +38,17 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+    # IMPORTANT NOTE:
+    #
+    # The code for our vote() view does have a small problem.
+    # It first gets the selected_choice object from the database,
+    # then computes the new value of votes, and then saves it back to the database.
+    #
+    # If two users of your website try to vote at exactly the same time,
+    # this might go wrong: The same value, let’s say 42, will be retrieved for votes.
+    # Then, for both users the new value of 43 is computed and saved,
+    # but 44 would be the expected value.
+    #
+    # This is called a race condition.
+    # If you are interested, you can read Avoiding race conditions using F() to learn how you can solve this issue.
